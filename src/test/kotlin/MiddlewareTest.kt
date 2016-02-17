@@ -40,7 +40,7 @@ class MiddlewareTest {
     @Test
     fun testMiddlewareCanModifyAction() {
         val initialState = TestState(0)
-        val store = Store(initialState, counterReducer, incrementPlusMiddleware)
+        val store = StoreImpl(initialState, counterReducer, incrementPlusMiddleware)
 
         val subscription = store.subscribe { state ->
             // We will have received the PLUS_ACTION 5 which the increment plus middleware will have incremented.
@@ -55,7 +55,7 @@ class MiddlewareTest {
     @Test
     fun testMiddlewareCanAccessState() {
         val initialState = TestState(0)
-        val store = Store(initialState, counterReducer, incrementPlusMiddleware, stateAccessingMiddleware)
+        val store = StoreImpl(initialState, counterReducer, incrementPlusMiddleware, stateAccessingMiddleware)
 
         store.dispatch(TestAction(PLUS_ACTION, 5))
         Assert.assertEquals(6, store.currentState.value)

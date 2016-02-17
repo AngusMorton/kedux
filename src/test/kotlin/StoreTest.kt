@@ -18,7 +18,7 @@ class StoreTest {
     @Test
     fun testSubscribersReceiveChanges() {
         val initialState = TestState(0)
-        val store = Store(initialState, counterReducer)
+        val store = Store.create(initialState, counterReducer)
 
         store.dispatch(TestAction(PLUS_ACTION, 1))
 

@@ -1,22 +1,7 @@
-import java.util.concurrent.atomic.AtomicBoolean
 
-class Store <S : State> {
+interface Store<S: State> {
 
-    var currentState: S private set
-    private var isDispatching: AtomicBoolean
-    private val subscribers: MutableList<(S) -> Unit>
-    private val reducer: (S, Action) -> S
-    private val dispatcherFunction: (Action) -> Action
-
-    constructor(initialState: S, reducer: (S, Action) -> S, vararg middleware: (((Action) -> Action)?, () -> S?) -> ((Action) -> Action) -> ((Action) -> Action)) {
-        this.reducer = reducer
-        this.subscribers = mutableListOf()
-        this.currentState = initialState
-        this.isDispatching = AtomicBoolean(false)
-        this.dispatcherFunction = middleware
-                .reversed()
-                .fold({ action -> defaultDispatch(action) }) { dispatchFunction, middleware -> middleware({ action -> defaultDispatch(action) }, { currentState })(dispatchFunction) }
-    }
+    var currentState : S
 
     /**
      * Dispatches an action. It is the only way to trigger a state change.
@@ -34,27 +19,7 @@ class Store <S : State> {
      * @returns the same action object you dispatched.
      *
      */
-    private fun defaultDispatch(action: Action): Action {
-        if (this.isDispatching.get()) {
-            throw IllegalStateException("Reducers may not dispatch actions")
-        }
-
-        try {
-            this.isDispatching.set(true)
-            this.currentState = this.reducer(this.currentState, action)
-        } finally {
-            this.isDispatching.set(false)
-        }
-
-        // Notify all subscribers
-        subscribers.forEach { it(this.currentState) }
-
-        return action
-    }
-
-    fun dispatch(action: Action): Action {
-        return dispatcherFunction(action)
-    }
+    fun dispatch(action: Action): Action
 
     /**
      * Adds a change listener. It will be called any time an action is dispatched,
@@ -63,8 +28,11 @@ class Store <S : State> {
      * @param subscriber function to be invoked on every dispatch.
      * @returns A function to remove this change listener.
      */
-    fun subscribe(subscriber: (S) -> Unit): Subscription {
-        this.subscribers.add(subscriber)
-        return SubscriptionImpl { this.subscribers.remove(subscriber) }
+    fun subscribe(subscriber: (S) -> Unit): Subscription
+
+    companion object {
+        fun <S: State> create(initialState: S, reducer: (S, Action) -> S, vararg middleware: (((Action) -> Action)?, () -> S?) -> ((Action) -> Action) -> ((Action) -> Action)) : Store<S> {
+            return StoreImpl(initialState, reducer, *middleware)
+        }
     }
 }
