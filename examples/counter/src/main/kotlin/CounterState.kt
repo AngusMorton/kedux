@@ -1,1 +1,1 @@
-data class CounterState(val value: Int) : State
+data class CounterState(val value: Int = 0) : State

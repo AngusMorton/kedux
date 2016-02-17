@@ -1,24 +1,22 @@
+import java.util.concurrent.atomic.AtomicBoolean
+
 class Store <S : State> {
 
-    var currentState: S? private set
-    private var isDispatching: Boolean
+    var currentState: S private set
+    private var isDispatching: AtomicBoolean
     private val subscribers: MutableList<(S) -> Unit>
-    private val reducer: (Action, S?) -> S
+    private val reducer: (S, Action) -> S
     private val dispatcherFunction: (Action) -> Action
 
-    constructor(initialState: S?, reducer: (Action, S?) -> S, vararg middleware: (((Action) -> Action)?, () -> S?) -> ((Action) -> Action) -> ((Action) -> Action)) {
+    constructor(initialState: S, reducer: (S, Action) -> S, vararg middleware: (((Action) -> Action)?, () -> S?) -> ((Action) -> Action) -> ((Action) -> Action)) {
         this.reducer = reducer
         this.subscribers = mutableListOf()
         this.currentState = initialState
-        this.isDispatching = false
+        this.isDispatching = AtomicBoolean(false)
         this.dispatcherFunction = middleware
                 .reversed()
                 .fold({ action -> defaultDispatch(action) }) { dispatchFunction, middleware -> middleware({ action -> defaultDispatch(action) }, { currentState })(dispatchFunction) }
     }
-
-    // DispatchFunction =  (A) -> A
-    // GetState = () -> StateType?
-    // Middleware = (((A) -> A)?, () -> S?) -> ((A) -> A) -> ((A) -> A)
 
     /**
      * Dispatches an action. It is the only way to trigger a state change.
@@ -37,19 +35,19 @@ class Store <S : State> {
      *
      */
     private fun defaultDispatch(action: Action): Action {
-        if (this.isDispatching) {
+        if (this.isDispatching.get()) {
             throw IllegalStateException("Reducers may not dispatch actions")
         }
 
         try {
-            this.isDispatching = true
-            this.currentState = this.reducer(action, this.currentState)
+            this.isDispatching.set(true)
+            this.currentState = this.reducer(this.currentState, action)
         } finally {
-            this.isDispatching = false
+            this.isDispatching.set(false)
         }
 
         // Notify all subscribers
-        subscribers.forEach { it(this.currentState!!) }
+        subscribers.forEach { it(this.currentState) }
 
         return action
     }

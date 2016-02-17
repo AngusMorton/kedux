@@ -3,10 +3,8 @@ import org.junit.Test
 
 class StoreTest {
 
-    private val counterReducer = createReducer<TestState> { action, state ->
-            if (state == null) {
-                TestState(0)
-            } else if (action is TestAction){
+    private val counterReducer = createReducer<TestState> { state, action ->
+            if (action is TestAction){
                 when (action.type) {
                     PLUS_ACTION -> state.copy(value = state.value + action.by)
                     MINUS_ACTION -> state.copy(value = state.value - action.by)

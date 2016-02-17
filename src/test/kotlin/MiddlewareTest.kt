@@ -3,7 +3,7 @@ import org.junit.Test
 
 class MiddlewareTest {
 
-    private val counterReducer = createReducer<TestState> { action, state ->
+    private val counterReducer = createReducer<TestState> { state, action ->
         if (action is TestAction) {
             if (state == null) {
                 TestState(0)

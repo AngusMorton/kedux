@@ -2,7 +2,7 @@
 class Main {
     companion object {
         @JvmStatic fun main(args: Array<String>) {
-            val store = Store(null, counterReducer, loggerMiddleware)
+            val store = Store(CounterState(), counterReducer, loggerMiddleware)
             store.subscribe { state -> println("main got: $state") }
             store.dispatch(CounterAction(ACTION_INCREMENT))
             store.dispatch(CounterAction(ACTION_INCREMENT))
