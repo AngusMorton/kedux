@@ -1,7 +1,11 @@
+package com.angusmorton.kedux
 
 interface Store<S: State> {
 
-    var currentState : S
+    /**
+     * @return the current state of the com.angusmorton.kedux.Store.
+     */
+    fun currentState() : S
 
     /**
      * Dispatches an action. It is the only way to trigger a state change.

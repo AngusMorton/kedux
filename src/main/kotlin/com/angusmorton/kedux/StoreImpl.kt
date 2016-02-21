@@ -1,8 +1,9 @@
+package com.angusmorton.kedux
+
 import java.util.concurrent.atomic.AtomicBoolean
 
 internal class StoreImpl <S : State> : Store<S> {
-
-    override var currentState: S
+    private var currentState: S
     private var isDispatching: AtomicBoolean
     private val subscribers: MutableList<(S) -> Unit>
     private val reducer: (S, Action) -> S
@@ -16,6 +17,10 @@ internal class StoreImpl <S : State> : Store<S> {
         this.dispatcherFunction = middleware
                 .reversed()
                 .fold({ action -> defaultDispatch(action) }) { dispatchFunction, middleware -> middleware({ action -> defaultDispatch(action) }, { currentState })(dispatchFunction) }
+    }
+
+    override fun currentState(): S {
+        return currentState
     }
 
     private fun defaultDispatch(action: Action): Action {
@@ -42,6 +47,6 @@ internal class StoreImpl <S : State> : Store<S> {
 
     override fun subscribe(subscriber: (S) -> Unit): Subscription {
         this.subscribers.add(subscriber)
-        return SubscriptionImpl { this.subscribers.remove(subscriber) }
+        return Subscription.create { this.subscribers.remove(subscriber) }
     }
 }

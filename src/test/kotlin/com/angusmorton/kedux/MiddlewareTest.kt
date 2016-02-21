@@ -1,3 +1,8 @@
+package com.angusmorton.kedux
+
+import com.angusmorton.kedux.StoreImpl
+import com.angusmorton.kedux.createMiddleware
+import com.angusmorton.kedux.createReducer
 import org.junit.Assert
 import org.junit.Test
 
@@ -5,15 +10,11 @@ class MiddlewareTest {
 
     private val counterReducer = createReducer<TestState> { state, action ->
         if (action is TestAction) {
-            if (state == null) {
-                TestState(0)
-            } else {
-                when (action.type) {
-                    PLUS_ACTION -> state.copy(value = state.value + action.by)
-                    MINUS_ACTION -> state.copy(value = state.value - action.by)
-                    RESET_ACTION -> state.copy(value = 0)
-                    else -> state
-                }
+            when (action.type) {
+                PLUS_ACTION -> state.copy(value = state.value + action.by)
+                MINUS_ACTION -> state.copy(value = state.value - action.by)
+                RESET_ACTION -> state.copy(value = 0)
+                else -> state
             }
         } else {
             TestState(0)
@@ -43,7 +44,7 @@ class MiddlewareTest {
         val store = StoreImpl(initialState, counterReducer, incrementPlusMiddleware)
 
         val subscription = store.subscribe { state ->
-            // We will have received the PLUS_ACTION 5 which the increment plus middleware will have incremented.
+            // We will have received the com.angusmorton.kedux.getPLUS_ACTION 5 which the increment plus middleware will have incremented.
             Assert.assertEquals(6, state.value)
         }
 
@@ -58,9 +59,9 @@ class MiddlewareTest {
         val store = StoreImpl(initialState, counterReducer, incrementPlusMiddleware, stateAccessingMiddleware)
 
         store.dispatch(TestAction(PLUS_ACTION, 5))
-        Assert.assertEquals(6, store.currentState.value)
+        Assert.assertEquals(6, store.currentState().value)
 
         store.dispatch(TestAction(PLUS_ACTION, 5))
-        Assert.assertEquals(0, store.currentState.value)
+        Assert.assertEquals(0, store.currentState().value)
     }
 }

@@ -1,3 +1,7 @@
+package com.angusmorton.kedux
+
+import com.angusmorton.kedux.combineReducers
+import com.angusmorton.kedux.createReducer
 import org.junit.Test
 
 import org.junit.Assert.*

@@ -1,3 +1,5 @@
+import com.angusmorton.kedux.createReducer
+
 val counterReducer = createReducer<CounterState> { state, action ->
     if (action is CounterAction) {
         when (action.type) {

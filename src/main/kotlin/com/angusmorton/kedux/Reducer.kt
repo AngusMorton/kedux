@@ -1,5 +1,7 @@
+package com.angusmorton.kedux
+
 /**
- * Creates a reducer function. Mostly for auto-correct.
+ * Creates a reducer function. Mostly for auto-correct convenience.
  *
  * TODO: verify the reducer function is correct before returning. e.g. Send it a random action and test it returns the same state
  */
