@@ -1,10 +1,24 @@
-group 'com.angusmorton'
-version '1.0-SNAPSHOT'
+group 'com.angusmorton.kedux'
+version '0.3'
 
 apply plugin: 'java'
 apply plugin: 'kotlin'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
 sourceCompatibility = 1.6
+
+buildscript {
+    ext.kotlin_version = '1.0.0'
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6"
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+    }
+}
 
 repositories {
     mavenCentral()
@@ -16,15 +30,74 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
-buildscript {
-    ext.kotlin_version = '1.0.0-rc-1036'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
+}
+
+def siteUrl = 'https://github.com/beamishjabberwock/kedux/'
+def issueUrl = 'https://github.com/beamishjabberwock/kedux/issues'
+def gitUrl = 'https://github.com/beamishjabberwock/kedux.git'
+
+bintray {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('bintray.properties').newDataInputStream())
+
+    user = property('user')
+    key = property('apikey')
+
+    configurations = ['archives']
+    pkg {
+        repo = 'maven'
+        name = 'kedux'
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/beamishjabberwock/kedux.git'
+        version {
+            name = '0.3'
+        }
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'jar'
+                name 'Kedux'
+                url siteUrl
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name 'Angus Morton'
+                        email 'angus.m.morton@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.kotlin.srcDirs
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
 }
