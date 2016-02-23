@@ -21,7 +21,6 @@ buildscript {
 }
 
 repositories {
-    mavenCentral()
     jcenter()
 }
 
@@ -39,9 +38,6 @@ def issueUrl = 'https://github.com/beamishjabberwock/kedux/issues'
 def gitUrl = 'https://github.com/beamishjabberwock/kedux.git'
 
 bintray {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('bintray.properties').newDataInputStream())
-
     user = property('user')
     key = property('apikey')
 
