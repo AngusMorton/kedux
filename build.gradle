@@ -5,8 +5,6 @@ apply plugin: 'java'
 apply plugin: 'kotlin'
 apply from: file('gradle/gradle-mvn-push.gradle')
 
-sourceCompatibility = 1.6
-
 buildscript {
     ext.kotlin_version = '1.0.0'
     repositories {
