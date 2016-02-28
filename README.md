@@ -1,7 +1,7 @@
 kedux
 ============
 
-Kedux is a [Redux][reduxjs]-ish architecture in Kotlin. It enables unidirectional data flow where state mutations occur through declarative actions.
+Kedux is a [Redux][reduxjs]-ish architecture in Kotlin. It enables unidirectional data flow where state mutations can only occur through declarative actions.
 
 
 Contributing
