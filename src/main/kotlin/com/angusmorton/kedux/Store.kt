@@ -3,7 +3,7 @@ package com.angusmorton.kedux
 interface Store<S: State> {
 
     /**
-     * @return the current state of the com.angusmorton.kedux.Store.
+     * @return the current state of the [Store].
      */
     fun currentState() : S
 
@@ -17,8 +17,7 @@ interface Store<S: State> {
      *
      *  @param action An object representing “what changed”. It is
      * a good idea to keep actions serializable so you can record and replay user
-     * sessions, or use the time travelling. It is a good idea to use
-     * string constants for action types.
+     * sessions, or use time travelling.
      *
      * @returns the same action object you dispatched.
      *
@@ -35,8 +34,8 @@ interface Store<S: State> {
     fun subscribe(subscriber: (S) -> Unit): Subscription
 
     companion object {
-        fun <S: State> create(initialState: S, reducer: (S, Action) -> S, vararg middleware: (((Action) -> Action)?, () -> S?) -> ((Action) -> Action) -> ((Action) -> Action)) : Store<S> {
-            return StoreImpl(initialState, reducer, *middleware)
+        fun <S: State> create(initialState: S, reducer: (S, Action) -> S) : Store<S> {
+            return StoreImpl(initialState, reducer)
         }
     }
 }

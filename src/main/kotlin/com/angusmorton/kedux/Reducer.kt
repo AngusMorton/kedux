@@ -2,8 +2,7 @@ package com.angusmorton.kedux
 
 /**
  * Creates a reducer function. Mostly for auto-correct convenience.
- *
- * TODO: verify the reducer function is correct before returning. e.g. Send it a random action and test it returns the same state
+ * A reducer should return the current state for any unrecognized action.
  */
 fun <S : State> createReducer(reducerFunction : (S, Action) -> S) : (S, Action) -> S = reducerFunction
 
@@ -12,7 +11,6 @@ fun <S : State> createReducer(reducerFunction : (S, Action) -> S) : (S, Action) 
  * It will call every child reducer, and gather their results into the state.
  *
  * @param reducers A number of reducer functions that need to be combined into one.
- * A reducer should return the current state for any unrecognized action.
  *
  * @returns A reducer function that invokes every reducer.
  */

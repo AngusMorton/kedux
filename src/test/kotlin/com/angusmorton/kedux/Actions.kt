@@ -1,8 +1,5 @@
 package com.angusmorton.kedux
 
-import com.angusmorton.kedux.Action
-import com.angusmorton.kedux.State
-
 internal val PLUS_ACTION = "com.angusmorton.kedux.getPLUS_ACTION"
 internal val MINUS_ACTION = "com.angusmorton.kedux.getMINUS_ACTION"
 internal val RESET_ACTION = "com.angusmorton.kedux.getRESET_ACTION"

@@ -1,7 +1,17 @@
 package com.angusmorton.kedux
 
+/**
+ * Used to allow unsubscribing from the [Store].
+ */
 interface Subscription {
-    var isDisposed: Boolean
+    /**
+     * Indicates whether this [Subscription] is unsubscribed.
+     */
+    var isUnsubscribed: Boolean
+
+    /**
+     * Stops the subscriber from receiving notifications about state changes.
+     */
     fun unsubscribe()
 
     companion object {
