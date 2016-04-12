@@ -5,7 +5,7 @@ import org.junit.Test
 
 class StoreTest {
 
-    private val counterReducer = createReducer<TestState> { state, action ->
+    private val counterReducer = { state: TestState, action: TestAction ->
         if (action is TestAction) {
             when (action.type) {
                 PLUS_ACTION -> state.copy(value = state.value + action.by)

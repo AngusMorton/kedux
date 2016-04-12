@@ -28,8 +28,8 @@ class ReducerTest {
     @Test
     fun testCombineReducers() {
         val initialState = TestState(0)
-        val plusOne = createReducer<TestState> { state, action -> state.copy(value = state.value + 1) }
-        val plusTwo = createReducer<TestState> { state, action -> state.copy(value = state.value + 2) }
+        val plusOne = { state: TestState, action: TestAction -> state.copy(value = state.value + 1) }
+        val plusTwo = { state: TestState, action: TestAction -> state.copy(value = state.value + 2) }
 
         val combinedReducers = combineReducers(plusOne, plusTwo)
         val newState = combinedReducers(initialState, TestAction(PLUS_ACTION, 1))

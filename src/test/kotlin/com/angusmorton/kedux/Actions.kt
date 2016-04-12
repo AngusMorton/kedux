@@ -5,6 +5,7 @@ internal val MINUS_ACTION = "com.angusmorton.kedux.getMINUS_ACTION"
 internal val RESET_ACTION = "com.angusmorton.kedux.getRESET_ACTION"
 internal val NO_ACTION = "com.angusmorton.kedux.getNO_ACTION"
 
-internal data class TestState(val value: Int) : State
+internal data class TestState(val value: Int)
 
-internal data class TestAction(val type: String, val by: Int) : Action
+internal data class TestAction(val type: String, val by: Int) {
+}

@@ -1,11 +1,11 @@
 package com.angusmorton.kedux
 
-interface Store<S: State> {
+interface Store<S, A> {
 
     /**
      * @return the current state of the [Store].
      */
-    fun currentState() : S
+    var state : S
 
     /**
      * Dispatches an action. It is the only way to trigger a state change.
@@ -22,7 +22,7 @@ interface Store<S: State> {
      * @returns the same action object you dispatched.
      *
      */
-    fun dispatch(action: Action): Action
+    fun dispatch(action: A): A
 
     /**
      * Adds a change listener. It will be called any time an action is dispatched,
@@ -34,7 +34,7 @@ interface Store<S: State> {
     fun subscribe(subscriber: (S) -> Unit): Subscription
 
     companion object {
-        fun <S: State> create(initialState: S, reducer: (S, Action) -> S) : Store<S> {
+        fun <S, A> create(initialState: S, reducer: (S, A) -> S) : Store<S, A> {
             return StoreImpl(initialState, reducer)
         }
     }
